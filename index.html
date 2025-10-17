@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated App</title>
+    <style>body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+h1 {
+  color: #333;
+}
+#total-sales {
+  margin-top: 20px;
+  font-size: 2em;
+  font-weight: bold;
+  color: #007BFF;
+}
+</style>
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sales Total</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<h1>Total Sales</h1>
+<div id="total-sales">Loading...</div>
+<script src="script.js"></script>
+</body>
+</html>
+    <script>document.addEventListener('DOMContentLoaded', () => {
+  fetch('data.csv')
+    .then(response => response.text())
+    .then(csvText => {
+      const lines = csvText.trim().split('\n');
+      let total = 0;
+      // Assuming first line is header
+      const header = lines[0].split(',');
+      const salesIndex = header.findIndex(col => col.toLowerCase() === 'sales');
+      if (salesIndex === -1) {
+        document.getElementById('total-sales').textContent = 'Sales column not found';
+        return;
+      }
+      for (let i = 1; i < lines.length; i++) {
+        const cols = lines[i].split(',');
+        const salesStr = cols[salesIndex];
+        const salesNum = parseFloat(salesStr);
+        if (!isNaN(salesNum)) {
+          total += salesNum;
+        }
+      }
+      document.getElementById('total-sales').textContent = total.toFixed(2);
+    })
+    .catch(error => {
+      document.getElementById('total-sales').textContent = 'Error loading data';
+      console.error('Error fetching CSV:', error);
+    });
+});</script>
+</body>
+</html>
