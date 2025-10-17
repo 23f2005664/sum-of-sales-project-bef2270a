@@ -8,16 +8,14 @@
   font-family: Arial, sans-serif;
   padding: 20px;
   background-color: #f9f9f9;
-  text-align: center;
 }
 h1 {
-  color: #333;
+  font-size: 24px;
 }
 #total-sales {
+  font-size: 48px;
+  color: #333;
   margin-top: 20px;
-  font-size: 2em;
-  font-weight: bold;
-  color: #007BFF;
 }
 </style>
 </head>
@@ -42,19 +40,12 @@ h1 {
     .then(csvText => {
       const lines = csvText.trim().split('\n');
       let total = 0;
-      // Assuming first line is header
-      const header = lines[0].split(',');
-      const salesIndex = header.findIndex(col => col.toLowerCase() === 'sales');
-      if (salesIndex === -1) {
-        document.getElementById('total-sales').textContent = 'Sales column not found';
-        return;
-      }
       for (let i = 1; i < lines.length; i++) {
         const cols = lines[i].split(',');
-        const salesStr = cols[salesIndex];
-        const salesNum = parseFloat(salesStr);
-        if (!isNaN(salesNum)) {
-          total += salesNum;
+        const salesStr = cols[1]; // assuming sales is in second column
+        const sales = parseFloat(salesStr);
+        if (!isNaN(sales)) {
+          total += sales;
         }
       }
       document.getElementById('total-sales').textContent = total.toFixed(2);
