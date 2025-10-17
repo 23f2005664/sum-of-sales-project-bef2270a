@@ -1,4 +1,3 @@
-Product,Region,Sales
-Apple,North,1000
-Banana,South,1500
-Cherry,East,800
+Product,Sales
+Apple,1000
+Banana,1500
