@@ -10,14 +10,13 @@
   background-color: #f9f9f9;
 }
 h1 {
-  font-size: 24px;
+  color: #333;
 }
 #total-sales {
-  font-size: 48px;
-  color: #333;
-  margin-top: 20px;
-}
-</style>
+  font-size: 2em;
+  color: #007BFF;
+  margin-top: 10px;
+}</style>
 </head>
 <body>
 <!DOCTYPE html>
@@ -34,26 +33,33 @@ h1 {
 <script src="script.js"></script>
 </body>
 </html>
-    <script>document.addEventListener('DOMContentLoaded', () => {
-  fetch('data.csv')
-    .then(response => response.text())
-    .then(csvText => {
-      const lines = csvText.trim().split('\n');
-      let total = 0;
-      for (let i = 1; i < lines.length; i++) {
-        const cols = lines[i].split(',');
-        const salesStr = cols[1]; // assuming sales is in second column
-        const sales = parseFloat(salesStr);
-        if (!isNaN(sales)) {
-          total += sales;
-        }
+    <script>fetch('data.csv')
+  .then(response => response.text())
+  .then(csvText => {
+    const lines = csvText.trim().split('\n');
+    if (lines.length < 2) {
+      document.getElementById('total-sales').textContent = 'No data available';
+      return;
+    }
+    const headers = lines[0].split(',');
+    const salesIndex = headers.findIndex(h => h.trim().toLowerCase() === 'sales');
+    if (salesIndex === -1) {
+      document.getElementById('total-sales').textContent = 'Sales column not found';
+      return;
+    }
+    let total = 0;
+    for (let i = 1; i < lines.length; i++) {
+      const cols = lines[i].split(',');
+      const saleStr = cols[salesIndex].trim();
+      const saleNum = parseFloat(saleStr);
+      if (!isNaN(saleNum)) {
+        total += saleNum;
       }
-      document.getElementById('total-sales').textContent = total.toFixed(2);
-    })
-    .catch(error => {
-      document.getElementById('total-sales').textContent = 'Error loading data';
-      console.error('Error fetching CSV:', error);
-    });
-});</script>
+    }
+    document.getElementById('total-sales').textContent = total.toFixed(2);
+  })
+  .catch(error => {
+    document.getElementById('total-sales').textContent = 'Error loading data';
+  });</script>
 </body>
 </html>
