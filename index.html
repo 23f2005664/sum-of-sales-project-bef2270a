@@ -6,16 +6,28 @@
     <title>Generated App</title>
     <style>body {
   font-family: Arial, sans-serif;
-  padding: 20px;
+  margin: 20px;
   background-color: #f9f9f9;
 }
 h1 {
   color: #333;
 }
-#total-sales {
-  font-size: 2em;
-  color: #007BFF;
-  margin-top: 10px;
+button {
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+button:hover {
+  background-color: #45a049;
+}
+#result {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #555;
 }</style>
 </head>
 <body>
@@ -24,42 +36,41 @@ h1 {
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Sales Total</title>
+<title>Sales Sum</title>
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<h1>Total Sales</h1>
-<div id="total-sales">Loading...</div>
+<h1>Sum of Sales</h1>
+<button id="loadBtn">Load Data</button>
+<div id="result"></div>
 <script src="script.js"></script>
 </body>
 </html>
-    <script>fetch('data.csv')
-  .then(response => response.text())
-  .then(csvText => {
-    const lines = csvText.trim().split('\n');
-    if (lines.length < 2) {
-      document.getElementById('total-sales').textContent = 'No data available';
-      return;
-    }
-    const headers = lines[0].split(',');
-    const salesIndex = headers.findIndex(h => h.trim().toLowerCase() === 'sales');
-    if (salesIndex === -1) {
-      document.getElementById('total-sales').textContent = 'Sales column not found';
-      return;
-    }
-    let total = 0;
-    for (let i = 1; i < lines.length; i++) {
-      const cols = lines[i].split(',');
-      const saleStr = cols[salesIndex].trim();
-      const saleNum = parseFloat(saleStr);
-      if (!isNaN(saleNum)) {
-        total += saleNum;
+    <script>document.getElementById('loadBtn').addEventListener('click', () => {
+  fetch('data.csv')
+    .then(response => response.text())
+    .then(csvText => {
+      const lines = csvText.trim().split('\n');
+      const header = lines[0].split(',');
+      const salesIndex = header.indexOf('Sales');
+      if (salesIndex === -1) {
+        document.getElementById('result').textContent = 'Sales column not found';
+        return;
       }
-    }
-    document.getElementById('total-sales').textContent = total.toFixed(2);
-  })
-  .catch(error => {
-    document.getElementById('total-sales').textContent = 'Error loading data';
-  });</script>
+      let sum = 0;
+      for (let i = 1; i < lines.length; i++) {
+        const columns = lines[i].split(',');
+        const salesValue = parseFloat(columns[salesIndex]);
+        if (!isNaN(salesValue)) {
+          sum += salesValue;
+        }
+      }
+      document.getElementById('result').textContent = `Total Sales: $${sum.toFixed(2)}`;
+    })
+    .catch(error => {
+      document.getElementById('result').textContent = 'Error loading data';
+      console.error(error);
+    });
+});</script>
 </body>
 </html>
